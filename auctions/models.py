@@ -8,7 +8,7 @@ CATEGORIES = (
     ('c', 'Electronics'),
     ('d', 'Miscellaneous'),
     ('e', 'Kitchen'),
-    ('f', '')
+    ('f', 'None')
 )
 
 
