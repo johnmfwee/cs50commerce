@@ -92,8 +92,8 @@ def show_listing(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
     if request.method == "POST":
         user = User.objects.get(username=request.user)
-        if request.POST.get("button") == "Watchlist":
-            if not user.watchlist.filter(listing=listing):
+        if request.POST.get("button") == "Watchlist": 
+            if not user.watchlist.filter(listing= listing):
                 watchlist = Watchlist()
                 watchlist.user = user
                 watchlist.listing = listing
@@ -102,13 +102,13 @@ def show_listing(request, listing_id):
                 user.watchlist.filter(listing=listing).delete()
             return HttpResponseRedirect(reverse('listing', args=(listing.id,)))
         if not listing.closed:
-            if request.POST.get("button") == "Close":
+            if request.POST.get("button") == "Close": 
                 listing.closed = True
                 listing.save()
             else:
                 price = float(request.POST["price"])
                 bids = listing.bids.all()
-                if user.username != listing.owner.username:
+                if user.username != listing.owner.username: # only let those who dont own the listing be able to bid
                     if price <= listing.price:
                         return render(request, "auctions/listing.html", {
                             "listing": listing,
@@ -117,6 +117,7 @@ def show_listing(request, listing_id):
                         })
                     form = BidForm(request.POST)
                     if form.is_valid():
+                        # clean up this
                         bid = form.save(commit=False)
                         bid.user = user
                         bid.save()
@@ -127,13 +128,13 @@ def show_listing(request, listing_id):
                         return render(request, 'auctions/listing.html', {
                             "form": form
                         })
-            return HttpResponseRedirect(reverse('listing', args=(listing.id,)))
-        else:
-            return render(request, "auctions/listing.html", {
-                "listing": listing,
-                "form": BidForm(),
-                "message": ""
-            })
+        return HttpResponseRedirect(reverse('listing', args=(listing.id,)))
+    else:
+        return render(request, "auctions/listing.html", {
+            "listing": listing,
+            "form": BidForm(),
+            "message": ""
+        })
 
 
 @login_required
